@@ -7,7 +7,7 @@
                 style="border-image: linear-gradient(to right, #b03535, #3c5e5e, #425d9e) 1;">
                 About the School
             </h2>
-            <p class="text-gray-700 leading-relaxed text-lg mb-8">{{ $profile->about }}</p>
+            <p class="text-gray-700 leading-relaxed text-lg mb-8">{{ $profile && $profile->about ? $profile->about : 'Welcome to our prestigious school...' }}</p>
 
             <div class="grid md:grid-cols-2 gap-8 mb-10">
                 <div>
@@ -15,14 +15,14 @@
                         style="border-image: linear-gradient(to right, #b03535, #3c5e5e, #425d9e) 1;">
                         Vision
                     </h3>
-                    <p class="text-gray-700 text-lg leading-relaxed">{{ $profile->vision ?? 'Our vision description goes here.' }}</p>
+                    <p class="text-gray-700 text-lg leading-relaxed">{{ $profile && $profile->vision ? $profile->vision : 'Our vision description goes here.' }}</p>
                 </div>
                 <div>
                     <h3 class="text-2xl font-bold text-gray-900 mb-4 font-serif border-l-4 pl-4"
                         style="border-image: linear-gradient(to right, #b03535, #3c5e5e, #425d9e) 1;">
                         Mission
                     </h3>
-                    <p class="text-gray-700 text-lg leading-relaxed">{{ $profile->mission ?? 'Our mission description goes here.' }}</p>
+                    <p class="text-gray-700 text-lg leading-relaxed">{{ $profile && $profile->mission ? $profile->mission : 'Our mission description goes here.' }}</p>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 Location
             </h2>
             <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-100">
-                @if(!empty($profile->map_embed))
+                @if($profile && !empty($profile->map_embed))
                     <div class="relative w-full" style="padding-top:56.25%">
                         <div class="absolute inset-0 [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:absolute [&>iframe]:inset-0">
                             {!! $profile->map_embed !!}
@@ -134,14 +134,14 @@
         <div class="max-w-5xl mx-auto" data-aos="fade-up">
             <h2 class="text-3xl font-bold text-gray-900 mb-6 font-serif border-l-4 border-[#3c5e5e] pl-4">Our History</h2>
 
-            @if($profile->founded_year)
+            @if($profile && $profile->founded_year)
                 <p class="text-gray-700 mb-4 text-lg italic">
                     Founded in <span class="font-semibold text-gray-900">{{ $profile->founded_year }}</span>
                 </p>
             @endif
 
             <p class="text-gray-700 leading-relaxed mb-6 text-justify">
-                {{ $profile->history ?? 'The school has a rich history dating back over a thousand years...' }}
+                {{ $profile && $profile->history ? $profile->history : 'The school has a rich history dating back over a thousand years...' }}
             </p>
 
             {{-- Founders --}}

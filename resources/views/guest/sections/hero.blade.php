@@ -1,7 +1,7 @@
 <section id="hero" class="relative relative h-[100vh] w-screen overflow-hidden">
     {{-- Hero Image --}}
     <img 
-        src="{{ $profile->hero_image ? asset('storage/' . $profile->hero_image) : 'https://picsum.photos/1600/900?blur' }}"
+        src="{{ $profile && $profile->hero_image ? asset('storage/' . $profile->hero_image) : 'https://picsum.photos/1600/900?blur' }}"
         alt="School Hero" 
         class="absolute inset-0 w-full h-full object-cover brightness-[0.6]"
     >
@@ -11,7 +11,7 @@
     <div class="relative z-10 flex flex-col items-center justify-center h-full text-center px-4">
 
         {{-- Logo (opsional) --}}
-        @if(!empty($profile->logo))
+        @if($profile && !empty($profile->logo))
             <div class="mt-8 flex justify-center" data-aos="zoom-in" data-aos-delay="100">
                 <img src="{{ asset('storage/' . $profile->logo) }}" 
                      alt="School Logo" 
@@ -26,7 +26,7 @@
                 transition-all duration-700"
             style="text-shadow: 0 0 12px rgba(255, 215, 100, 0.25), 0 0 20px rgba(255, 215, 100, 0.15);"
             data-aos="fade-up" data-aos-delay="300">
-            Welcome to<br> {{ $profile->title ?? 'Hogwarts School of Witchcraft and Wizardry' }}
+            Welcome to<br> {{ $profile && $profile->title ? $profile->title : 'Hogwarts School of Witchcraft and Wizardry' }}
         </h1>
 
 
