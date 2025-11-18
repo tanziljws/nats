@@ -27,7 +27,7 @@ class UserManagementController extends Controller
             $query->where('status', $request->status);
         }
 
-        $users = $query->latest()->paginate(15);
+        $users = $query->latest()->paginate(10)->withQueryString();
         
         return view('admin.users.index', compact('users'));
     }

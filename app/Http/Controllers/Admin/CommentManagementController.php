@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FacilityPhotoComment;
+use App\Models\FacilityCategory;
 use App\Models\FacilityPhotoLike;
 use App\Models\HogwartsProphetComment;
 use App\Models\HogwartsProphetLike;
@@ -13,6 +14,7 @@ use App\Models\AchievementLike;
 use App\Models\FacilityPhoto;
 use App\Models\HogwartsProphet;
 use App\Models\Achievement;
+use App\Models\House;
 
 class CommentManagementController extends Controller
 {
@@ -41,33 +43,97 @@ class CommentManagementController extends Controller
     }
 
     // Facility Photo Comments
-    public function facilityComments()
+    public function facilityComments(Request $request)
     {
-        $comments = FacilityPhotoComment::with('photo.category')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $categoryId = $request->query('category_id');
+        $photoId = $request->query('photo_id');
 
-        return view('admin.comments.facility-photos', compact('comments'));
+        $commentsQuery = FacilityPhotoComment::with('photo.category')
+            ->when($categoryId, function ($q) use ($categoryId) {
+                $q->whereHas('photo', function ($p) use ($categoryId) {
+                    $p->where('facility_category_id', $categoryId);
+                });
+            })
+            ->when($photoId, function ($q) use ($photoId) {
+                $q->where('facility_photo_id', $photoId);
+            })
+            ->orderBy('created_at', 'desc');
+
+        $comments = $commentsQuery->paginate(10)->appends($request->query());
+
+        $categories = FacilityCategory::orderBy('name')->get(['id','name']);
+        $photos = [];
+        if ($categoryId) {
+            $photos = FacilityPhoto::where('facility_category_id', $categoryId)
+                ->orderBy('name')
+                ->get(['id','name']);
+        }
+
+        return view('admin.comments.facility-photos', [
+            'comments' => $comments,
+            'categories' => $categories,
+            'selectedCategoryId' => $categoryId,
+            'photos' => $photos,
+            'selectedPhotoId' => $photoId,
+        ]);
     }
 
     // HogwartsProphet Comments
-    public function prophetComments()
+    public function prophetComments(Request $request)
     {
-        $comments = HogwartsProphetComment::with('article')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $articleId = $request->query('article_id');
 
-        return view('admin.comments.hogwarts-prophet', compact('comments'));
+        $commentsQuery = HogwartsProphetComment::with('article')
+            ->when($articleId, function ($q) use ($articleId) {
+                $q->where('hogwarts_prophet_id', $articleId);
+            })
+            ->orderBy('created_at', 'desc');
+
+        $comments = $commentsQuery->paginate(10)->appends($request->query());
+
+        $articles = HogwartsProphet::orderBy('title')->get(['id','title']);
+
+        return view('admin.comments.hogwarts-prophet', [
+            'comments' => $comments,
+            'articles' => $articles,
+            'selectedArticleId' => $articleId,
+        ]);
     }
 
     // Achievement Comments
-    public function achievementComments()
+    public function achievementComments(Request $request)
     {
-        $comments = AchievementComment::with('achievement')
-            ->orderBy('created_at', 'desc')
-            ->paginate(20);
+        $houseId = $request->query('house_id');
+        $achievementId = $request->query('achievement_id');
 
-        return view('admin.comments.achievements', compact('comments'));
+        $commentsQuery = AchievementComment::with(['achievement.house'])
+            ->when($houseId, function ($q) use ($houseId) {
+                $q->whereHas('achievement', function ($a) use ($houseId) {
+                    $a->where('house_id', $houseId);
+                });
+            })
+            ->when($achievementId, function ($q) use ($achievementId) {
+                $q->where('achievement_id', $achievementId);
+            })
+            ->orderBy('created_at', 'desc');
+
+        $comments = $commentsQuery->paginate(10)->appends($request->query());
+
+        $houses = House::orderBy('name')->get(['id','name']);
+        $achievements = [];
+        if ($houseId) {
+            $achievements = Achievement::where('house_id', $houseId)
+                ->orderBy('title')
+                ->get(['id','title','image','house_id']);
+        }
+
+        return view('admin.comments.achievements', [
+            'comments' => $comments,
+            'houses' => $houses,
+            'achievementsList' => $achievements,
+            'selectedHouseId' => $houseId,
+            'selectedAchievementId' => $achievementId,
+        ]);
     }
 
     // Delete Facility Photo Comment

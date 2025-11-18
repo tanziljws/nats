@@ -14,17 +14,29 @@ class ProfessorController extends Controller
      */
     public function index(Request $request)
     {
-        $houses = House::all(); // ambil semua house
+        $houses = House::orderBy('name')->get();
+        $houseId = $request->query('house_id');
+        $search = $request->query('search');
 
-        // Optional: filter by house_id
-        $query = Professor::with('house');
-        if ($request->has('house_id') && $request->house_id) {
-            $query->where('house_id', $request->house_id);
-        }
+        $query = Professor::with('house')
+            ->when($houseId, fn($q) => $q->where('house_id', $houseId))
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($qq) use ($search) {
+                    $qq->where('name', 'like', "%{$search}%")
+                       ->orWhere('subject', 'like', "%{$search}%");
+                });
+            });
 
-        $professors = $query->orderBy('id', 'desc')->paginate(7); // <- per 20 item
+        $professors = $query->orderBy('id', 'desc')
+            ->paginate(7)
+            ->appends($request->query());
 
-        return view('admin.professors.index', compact('professors', 'houses'));
+        return view('admin.professors.index', [
+            'professors' => $professors,
+            'houses' => $houses,
+            'selectedHouseId' => $houseId,
+            'searchTerm' => $search,
+        ]);
     }
 
 

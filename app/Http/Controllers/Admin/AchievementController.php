@@ -9,10 +9,24 @@ use App\Models\House;
 
 class AchievementController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $achievements = Achievement::latest()->get();
-        return view('admin.achievements.index', compact('achievements'));
+        $houseId = $request->query('house_id');
+
+        $achievements = Achievement::when($houseId, function ($q) use ($houseId) {
+                $q->where('house_id', $houseId);
+            })
+            ->latest()
+            ->paginate(5)
+            ->appends($request->query());
+
+        $houses = House::orderBy('name')->get(['id','name']);
+
+        return view('admin.achievements.index', [
+            'achievements' => $achievements,
+            'houses' => $houses,
+            'selectedHouseId' => $houseId,
+        ]);
     }
 
     public function create(Request $request)
@@ -74,8 +88,10 @@ class AchievementController extends Controller
 
     $achievement->update($data);
 
-    // Biar tetap di halaman yang sama (misal edit house)
-    return redirect()->back()->with('success', 'Achievement updated successfully!');
+    // Redirect to index and preserve house filter if available
+    return redirect()->route('admin.achievements.index', [
+        'house_id' => $achievement->house_id
+    ])->with('success', 'Achievement updated successfully!');
 }
 
     public function destroy(Achievement $achievement)

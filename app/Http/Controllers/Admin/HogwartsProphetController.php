@@ -19,7 +19,7 @@ class HogwartsProphetController extends Controller
                   ->orWhere('writer', 'like', "%{$search}%");
         }
 
-        $news = $query->orderBy('created_at', 'desc')->paginate(10);
+        $news = $query->orderBy('created_at', 'desc')->paginate(5)->withQueryString();
 
         return view('admin.hogwarts-prophet.index', compact('news'));
     }

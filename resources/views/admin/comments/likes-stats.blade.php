@@ -116,7 +116,7 @@
                     <tr>
                         <th class="py-3 px-4">#</th>
                         <th class="py-3 px-4">Achievement Title</th>
-                        <th class="py-3 px-4">Category</th>
+                        <th class="py-3 px-4">House</th>
                         <th class="py-3 px-4">Likes</th>
                         <th class="py-3 px-4">Comments</th>
                     </tr>
@@ -127,7 +127,25 @@
                             <td class="py-3 px-4 text-gray-500">{{ $index + 1 }}</td>
                             <td class="py-3 px-4 font-medium text-gray-800">{{ Str::limit($achievement->title, 60) }}</td>
                             <td class="py-3 px-4">
-                                <span class="px-2 py-1 rounded-lg bg-gray-200 text-gray-700 text-xs">{{ $achievement->category }}</span>
+                                @php
+                                    $houseName = $achievement->house->name ?? null;
+                                    $houseGradients = [
+                                        'Gryffindor' => ['#5c0c0c', '#8a3333'],
+                                        'Slytherin' => ['#063015', '#336343'],
+                                        'Ravenclaw' => ['#182552', '#6e8ab5'],
+                                        'Hufflepuff' => ['#59510a', '#ab8e37'],
+                                    ];
+                                    $from = $houseGradients[$houseName][0] ?? '#888888';
+                                    $to   = $houseGradients[$houseName][1] ?? '#aaaaaa';
+                                @endphp
+                                @if($houseName)
+                                    <span class="inline-flex items-center justify-center h-6 w-20 text-white text-xs font-semibold rounded-full shadow-sm"
+                                          style="background: linear-gradient(90deg, {{ $from }} 0%, {{ $to }} 100%);">
+                                        {{ $houseName }}
+                                    </span>
+                                @else
+                                    <span class="px-2 py-1 rounded-full bg-gray-200 text-gray-700 text-xs">-</span>
+                                @endif
                             </td>
                             <td class="py-3 px-4">
                                 <span class="text-red-600 font-semibold"><i class="fas fa-heart"></i> {{ $achievement->likes_count }}</span>

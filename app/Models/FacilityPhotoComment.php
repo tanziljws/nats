@@ -18,7 +18,7 @@ class FacilityPhotoComment extends Model
 
     public function photo()
     {
-        return $this->belongsTo(FacilityPhoto::class);
+        return $this->belongsTo(FacilityPhoto::class, 'facility_photo_id');
     }
 
     public function user()

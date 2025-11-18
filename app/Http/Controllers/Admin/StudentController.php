@@ -32,7 +32,21 @@ class StudentController extends Controller
             }
         }
 
-        $students = $query->with('house')->latest()->get(['id', 'photo', 'name', 'year', 'birth_date']);
+        // Pencarian nama / kode siswa
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('student_code', 'like', "%{$search}%");
+            });
+        }
+
+        // Gunakan pagination supaya tampilannya sama dengan professors
+        $students = $query
+            ->with('house')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
 
         // 
         $totalStudents = Student::whereNotNull('house_id')

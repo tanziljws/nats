@@ -18,20 +18,30 @@
         </div>
 
         {{-- Breadcrumb / Category Selector --}}
-        <div class="flex justify-center gap-6 mb-8 text-gray-700 font-semibold">
+        <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mb-8 text-gray-700 font-semibold">
             <template x-for="cat in categories" :key="cat.id">
                 <button @click="selectCategory(cat.id)" type="button"
                         class="relative px-3 py-1 hover:text-[#425d9e] transition-all duration-300"
                         :class="selectedCategory === cat.id ? 'text-[#425d9e] font-bold' : ''">
                     <span x-text="cat.name"></span>
-                    <span x-show="selectedCategory === cat.id" x-transition
-                          class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] rounded-full mt-1"></span>
+                    <div x-show="selectedCategory === cat.id" x-transition class="absolute bottom-0 left-0 w-full mt-1 h-1">
+                        <svg class="w-full h-full" viewBox="0 0 100 4" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient :id="'cat-grad-'+cat.id" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#b03535"></stop>
+                                    <stop offset="50%" stop-color="#3c5e5e"></stop>
+                                    <stop offset="100%" stop-color="#425d9e"></stop>
+                                </linearGradient>
+                            </defs>
+                            <rect width="100" height="4" :fill="'url(#cat-grad-'+cat.id)" rx="2" ry="2"></rect>
+                        </svg>
+                    </div>
                 </button>
             </template>
         </div>
 
         {{-- Achievement Cards --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <template x-for="(ach, idx) in filteredAchievements" :key="ach.id">
                 <div class="group bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300"
                      @click="openModal(idx)">
@@ -42,9 +52,9 @@
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                              :alt="ach.title">
 
-                        {{-- House Badge --}}
-                        <span class="absolute top-3 left-3 px-2 py-1 text-xs font-semibold rounded-full text-white shadow-sm z-10"
-                              :class="houseGradientClass(ach.house)">
+                        {{-- House Badge solid per-house color --}}
+                        <span class="absolute top-3 left-3 z-10 inline-flex items-center px-2 py-1 rounded-full text-white text-xs font-semibold shadow"
+                              :style="{ backgroundColor: houseSolidColor(ach.house) }">
                             <span x-text="ach.house || 'General'"></span>
                         </span>
 
@@ -140,12 +150,23 @@
                 <form @submit.prevent="postComment()" class="mt-3 flex gap-2">
                     <input type="text" x-model="newComment" placeholder="Write a comment..."
                         class="flex-1 px-3 py-2 rounded-2xl border border-gray-200 focus:outline-none" required>
-                    <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-serif shadow transition hover:scale-105"
-                            style="background: linear-gradient(90deg, #b03535, #3c5e5e, #425d9e);">
-                        Send
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m0 0l-6-6m6 6l-6 6"/>
+                    <button type="submit" class="relative inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-serif shadow transition hover:scale-105 overflow-hidden">
+                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="send-grad-show" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#b03535" />
+                                    <stop offset="50%" stop-color="#3c5e5e" />
+                                    <stop offset="100%" stop-color="#425d9e" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="0" y="0" width="100" height="40" rx="16" ry="16" fill="url(#send-grad-show)" />
                         </svg>
+                        <span class="relative inline-flex items-center gap-1">
+                            Send
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m0 0l-6-6m6 6l-6 6"/>
+                            </svg>
+                        </span>
                     </button>
                 </form>
             </div>
@@ -214,13 +235,13 @@ function achievementPage() {
             this.openModal(this.modalIndex);
         },
 
-        houseGradientClass(house) {
+        houseColors(house) {
             const colors = {
-                'Gryffindor': 'bg-gradient-to-r from-[#5c0c0c] to-[#8a3333]',
-                'Slytherin': 'bg-gradient-to-r from-[#063015] to-[#336343]',
-                'Ravenclaw': 'bg-gradient-to-r from-[#182552] to-[#6e8ab5]',
-                'Hufflepuff': 'bg-gradient-to-r from-[#59510a] to-[#ab8e37]',
-                'General': 'bg-gray-400'
+                'Gryffindor': { from: '#5c0c0c', to: '#8a3333' },
+                'Slytherin': { from: '#063015', to: '#336343' },
+                'Ravenclaw': { from: '#182552', to: '#6e8ab5' },
+                'Hufflepuff': { from: '#59510a', to: '#ab8e37' },
+                'General': { from: '#6b7280', to: '#9ca3af' }
             };
             return colors[house] || colors['General'];
         },

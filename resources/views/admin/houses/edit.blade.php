@@ -182,7 +182,7 @@
                             
                             <h3 class="text-lg font-semibold mb-4 text-gray-800">Add New Achievement</h3>
 
-                            <form action="{{ route('admin.achievements.store') }}" method="POST" enctype="multipart/form-data"  class="space-y-4">
+                            <form action="{{ route('admin.houses.storeAchievement', $house->id) }}" method="POST" enctype="multipart/form-data"  class="space-y-4">
                                 @csrf
 
                                 {{-- Title --}}
@@ -208,11 +208,13 @@
                                         class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#3c5e5e] focus:outline-none">
                                 </div>
 
-                                {{-- Image --}}
                                 <div>
                                     <label class="block font-semibold mb-1">Image</label>
-                                    <input type="file" name="image"
+                                    <input id="createImage" type="file" name="image" accept="image/*"
                                         class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#3c5e5e] focus:outline-none">
+                                    <div id="createPreview" class="w-full h-48 bg-gray-100 rounded-xl mt-3 flex items-center justify-center overflow-hidden">
+                                        <i class="fas fa-trophy text-4xl opacity-40"></i>
+                                    </div>
                                 </div>
 
                                 {{-- Buttons --}}
@@ -239,6 +241,25 @@
                             achievementModal.classList.add('hidden');
                             achievementModal.classList.remove('flex');
                         }
+
+                        (function(){
+                            const input = document.getElementById('createImage');
+                            const preview = document.getElementById('createPreview');
+                            if(input && preview){
+                                input.addEventListener('change', (e)=>{
+                                    const file = e.target.files && e.target.files[0];
+                                    if(!file){
+                                        preview.innerHTML = '<i class="fas fa-trophy text-4xl opacity-40"></i>';
+                                        return;
+                                    }
+                                    const reader = new FileReader();
+                                    reader.onload = ev => {
+                                        preview.innerHTML = `<img src="${ev.target.result}" class="w-full h-full object-cover">`;
+                                    };
+                                    reader.readAsDataURL(file);
+                                });
+                            }
+                        })();
                     </script>
 
                     {{-- Modal Edit --}}
@@ -270,8 +291,8 @@
                                         <select name="house_id" id="editHouse"
                                             class="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-[#3c5e5e] focus:outline-none">
                                             <option value="">-- No House --</option>
-                                            @foreach ($houses as $house)
-                                                <option value="{{ $house->id }}">{{ $house->name }}</option>
+                                            @foreach ($houses as $h)
+                                                <option value="{{ $h->id }}">{{ $h->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

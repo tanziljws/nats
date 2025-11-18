@@ -97,38 +97,60 @@
                         <td class="py-3 px-4 text-gray-500 text-sm">{{ $user->last_login_diff }}</td>
 
                         {{-- Actions --}}
-                        <td class="py-3 px-4 text-right flex justify-end gap-2 flex-wrap">
+                        <td class="py-3 px-4 text-right flex justify-end gap-3">
+                            {{-- View --}}
                             <a href="{{ route('admin.users.show', $user->id) }}" 
-                               class="px-3 py-1.5 bg-blue-600 text-white rounded-xl hover:opacity-90 transition text-sm flex items-center gap-1">
-                                <i class="fas fa-eye"></i> View
+                               class="text-blue-600 hover:text-blue-700 flex items-center justify-center" title="View">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0-4 0" />
+                                    <path d="M21 12q-3.6 6-9 6t-9-6q3.6-6 9-6t9 6" />
+                                </svg>
                             </a>
 
+                            {{-- Edit --}}
                             <a href="{{ route('admin.users.edit', $user->id) }}" 
-                               class="px-3 py-1.5 bg-yellow-500 text-white rounded-xl hover:opacity-90 transition text-sm flex items-center gap-1">
-                                <i class="fas fa-edit"></i> Edit
+                               class="text-yellow-500 hover:text-yellow-600 flex items-center justify-center" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 21h18" />
+                                    <path d="M7 17v-4l10 -10l4 4l-10 10h-4" />
+                                    <path d="M14 6l4 4" />
+                                    <path d="M14 6l4 4L21 7L17 3Z" fill="currentColor" fill-opacity="0.3" />
+                                </svg>
                             </a>
 
+                            {{-- Ban / Activate --}}
                             @if($user->status == 'active')
                                 <form action="{{ route('admin.users.ban', $user->id) }}" method="POST" onsubmit="return confirm('Ban this user?')">
                                     @csrf
-                                    <button type="submit" class="px-3 py-1.5 bg-orange-500 text-white rounded-xl hover:opacity-90 transition text-sm flex items-center gap-1">
-                                        <i class="fas fa-ban"></i> Ban
+                                    <button type="submit" class="text-orange-500 hover:text-orange-600 flex items-center justify-center" title="Ban">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 22a10 10 0 1 0 0 -20a10 10 0 0 0 0 20Z" />
+                                            <path d="M5.7 5.7l12.6 12.6" />
+                                        </svg>
                                     </button>
                                 </form>
                             @else
-                                <form action="{{ route('admin.users.activate', $user->id) }}" method="POST">
+                                <form action="{{ route('admin.users.activate', $user->id) }}" method="POST" onsubmit="return confirm('Activate this user?')">
                                     @csrf
-                                    <button type="submit" class="px-3 py-1.5 bg-green-500 text-white rounded-xl hover:opacity-90 transition text-sm flex items-center gap-1">
-                                        <i class="fas fa-check-circle"></i> Activate
+                                    <button type="submit" class="text-green-600 hover:text-green-700 flex items-center justify-center" title="Activate">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 22a10 10 0 1 0 0 -20a10 10 0 0 0 0 20Z" />
+                                            <path d="M9 12l2 2l4 -4" />
+                                        </svg>
                                     </button>
                                 </form>
                             @endif
 
+                            {{-- Delete --}}
                             <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Delete this user permanently?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="px-3 py-1.5 bg-red-600 text-white rounded-xl hover:opacity-90 transition text-sm flex items-center gap-1">
-                                    <i class="fas fa-trash"></i> Delete
+                                <button type="submit" class="text-red-500 hover:text-red-600 flex items-center justify-center" title="Delete">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 20h5c0.5 0 1 -0.5 1 -1v-14M12 20h-5c-0.5 0 -1 -0.5 -1 -1v-14" />
+                                        <path d="M4 5h16" />
+                                        <path d="M10 4h4M10 9v7M14 9v7" />
+                                    </svg>
                                 </button>
                             </form>
                         </td>
@@ -143,8 +165,8 @@
     </div>
 
     {{-- Pagination --}}
-    <div class="mt-6">
-        {{ $users->links() }}
+    <div class="mt-6 flex justify-center">
+        {{ $users->onEachSide(1)->links('vendor.pagination.clean') }}
     </div>
 </div>
 @endsection

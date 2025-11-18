@@ -15,7 +15,7 @@
         Achievements
     </h1>
     <p class="text-gray-500 mt-2">Manage, edit, publish, and archive all achievements</p>
-</div>
+ </div>
 
 {{-- Search --}}
 <form method="GET" action="{{ route('admin.achievements.index') }}" class="flex gap-2 w-full mb-6">
@@ -36,8 +36,17 @@
 <div class="min-h-screen bg-white text-gray-800 px-6 lg:px-10 py-10">
 
     {{-- Add Button --}}
-    <div class="flex justify-end mb-8 gap-4">
-        <a href="{{ route('admin.achievements.create') }}"
+    <div class="flex justify-end mb-8 gap-4 items-center">
+        <form method="GET" action="{{ route('admin.achievements.index') }}" class="flex items-center gap-2">
+            <input type="hidden" name="search" value="{{ request('search') }}">
+            <select name="house_id" class="h-11 px-3 border border-gray-300 rounded-xl text-sm" onchange="this.form.submit()">
+                <option value="">All Houses</option>
+                @foreach(($houses ?? []) as $h)
+                    <option value="{{ $h->id }}" {{ (string)($selectedHouseId ?? '') === (string)$h->id ? 'selected' : '' }}>{{ $h->name }}</option>
+                @endforeach
+            </select>
+        </form>
+        <a href="{{ route('admin.achievements.create', ['house_id' => $selectedHouseId]) }}"
            class="h-11 px-5 bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] text-white rounded-xl shadow font-medium hover:opacity-90 transition flex items-center whitespace-nowrap">
             <i class="fas fa-plus mr-2"></i> New Achievement
         </a>
@@ -58,7 +67,7 @@
             <div class="flex flex-col md:flex-row gap-5 bg-white border border-gray-200 shadow-sm rounded-2xl overflow-hidden p-5 hover:shadow-md transition">
 
                 {{-- Image --}}
-                <div class="w-full md:w-44 aspect-[5/3] flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                <div class="w-full md:w-44 aspect-[5/3] flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 ring-1 ring-gray-200 shadow-sm hover:shadow-md transition">
                     @if(!empty($item->image) && file_exists(public_path('storage/' . $item->image)))
                         <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover" alt="Achievement Image">
                     @else
@@ -103,10 +112,25 @@
 
                     <div class="mt-4 flex flex-col md:flex-row justify-between items-start md:items-end text-sm text-gray-500 gap-3">
                         {{-- Info --}}
-                        <div>
+                        <div class="flex items-center gap-4">
                             <p class="text-xs text-gray-400">
                                 {{ $item->date ? \Carbon\Carbon::parse($item->date)->format('d M Y') : '-' }}
                             </p>
+                            <span class="inline-flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12s3.75-7.5 9.75-7.5S21.75 12 21.75 12 18 19.5 12 19.5 2.25 12 2.25 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <span>{{ (int)($item->view_count ?? 0) }}</span>
+                            </span>
+                            <a href="{{ route('admin.comments.likes-stats') }}" class="inline-flex items-center gap-1 text-red-600 hover:opacity-90 transition text-xs">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                <span>{{ $item->likes()->count() }}</span>
+                            </a>
+                            <a href="{{ route('admin.comments.achievements', ['achievement_id' => $item->id, 'house_id' => $item->house_id]) }}" class="inline-flex items-center gap-1 text-gray-700 hover:opacity-90 transition text-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M7 10h10M7 14h7" />
+                                    <path d="M5 5h14a2 2 0 0 1 2 2v9l-3-2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" fill-opacity=".15" />
+                                </svg>
+                                <span>{{ $item->comments()->count() }}</span>
+                            </a>
                         </div>
 
                         {{-- Actions --}}
@@ -149,6 +173,11 @@
                 <p>No achievements found.</p>
             </div>
         @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-8">
+        {{ $achievements->onEachSide(1)->links('vendor.pagination.clean') }}
     </div>
 </div>
 

@@ -9,11 +9,14 @@
 
             <!-- Menu Desktop -->
             <div class="hidden lg:flex lg:items-center lg:space-x-8">
-                <a href="{{ route('guest.home') }}" class="block text-gray-700 hover:text-amber-700">Home</a>
+                
                 <a href="{{ route('guest.home') }}#about" class="block text-gray-700 hover:text-amber-700">Profile</a>
                 <a href="{{ route('guest.houses.index') }}" class="block text-gray-700 hover:text-amber-700">Houses</a>
                 <a href="{{ route('guest.hogwarts-prophet.index') }}" class="block text-gray-700 hover:text-amber-700">HogwartsProphet</a>
+                <a href="{{ route('guest.achievements.index') }}" class="block text-gray-700 hover:text-amber-700">Achievements</a>
                 <a href="{{ route('guest.facilities.index') }}" class="block text-gray-700 hover:text-amber-700">Facilities</a>
+
+                
                 
                 {{-- User Auth Links --}}
                 @auth('web')
@@ -68,10 +71,10 @@
 
     <!-- mobile menu -->
     <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2">
-        <a href="{{ route('guest.home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Home</a>
         <a href="{{ route('guest.home') }}#school-profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
         <a href="{{ route('guest.home') }}#houses" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Houses</a>
         <a href="{{ route('guest.hogwarts-prophet.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">HogwartsProphet</a>
+        <a href="{{ route('guest.achievements.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Achievements</a>
         <a href="{{ route('guest.facilities.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Facilities</a>
         <a href="{{ route('guest.home') }}#contact" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Contact</a>
         
@@ -87,7 +90,19 @@
             </form>
         @else
             <a href="{{ route('user.login') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Login</a>
-            <a href="{{ route('user.register') }}" class="block px-4 py-2 bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] text-white rounded text-center">Register</a>
+            <a href="{{ route('user.register') }}" class="relative overflow-hidden block px-4 py-2 text-white rounded text-center">
+                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="nav-register-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#b03535" />
+                            <stop offset="50%" stop-color="#3c5e5e" />
+                            <stop offset="100%" stop-color="#425d9e" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="0" y="0" width="100" height="40" rx="8" ry="8" fill="url(#nav-register-grad)" />
+                </svg>
+                <span class="relative">Register</span>
+            </a>
         @endauth
     </div>
 </nav>

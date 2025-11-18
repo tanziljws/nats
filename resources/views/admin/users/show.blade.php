@@ -1,169 +1,237 @@
-@extends('admin.layout')
+@extends('layouts.manage')
 
 @section('title', 'User Details')
 
+@php
+    $links = [
+        ['label' => 'Dashboard', 'route' => route('admin.dashboard')],
+        ['label' => 'Users', 'route' => route('admin.users.index')],
+        ['label' => $user->name, 'route' => null],
+    ];
+@endphp
+
 @section('content')
-<div class="container mx-auto px-6 py-8">
-    <div class="flex justify-between items-center mb-6">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">User Details</h1>
-            <nav class="text-sm text-gray-600">
-                <a href="{{ route('admin.dashboard') }}" class="hover:text-blue-600">Dashboard</a>
-                <span class="mx-2">/</span>
-                <a href="{{ route('admin.users.index') }}" class="hover:text-blue-600">Users</a>
-                <span class="mx-2">/</span>
-                <span>{{ $user->name }}</span>
-            </nav>
-        </div>
-        <a href="{{ route('admin.users.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">
-            <i class="fas fa-arrow-left mr-2"></i> Back
-        </a>
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-10 px-6">
+    <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold bg-clip-text text-transparent 
+                   bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] drop-shadow-sm">
+            User Details
+        </h1>
+        <p class="text-gray-600 mt-2 text-sm">View and manage user information and activity</p>
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
-            {{ session('success') }}
+        <div class="mb-6 bg-green-50 border border-green-300 text-green-800 px-4 py-3 rounded-xl shadow-sm flex items-center gap-2 max-w-5xl mx-auto">
+            <i class="fas fa-check-circle text-green-600"></i>
+            <span>{{ session('success') }}</span>
         </div>
     @endif
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         <!-- User Info Card -->
         <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="bg-white rounded-xl shadow border border-gray-200 p-6">
+                
+                {{-- Header --}}
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="w-1.5 h-5 bg-[#3c5e5e] rounded"></span>
+                    <span class="text-xs font-semibold tracking-wide uppercase text-[#3c5e5e]">
+                        User Profile
+                    </span>
+                </div>
+
+                {{-- Avatar --}}
                 <div class="text-center mb-6">
                     @if($user->avatar)
-                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-32 h-32 rounded-full object-cover mx-auto mb-4">
+                        <img src="{{ asset('storage/' . $user->avatar) }}" 
+                            class="w-28 h-28 rounded-full object-cover mx-auto mb-4 shadow-sm border border-gray-200">
                     @else
-                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-4xl mx-auto mb-4">
+                        <div class="w-28 h-28 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 
+                                    flex items-center justify-center text-white font-bold text-4xl mx-auto mb-4 shadow-sm">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                     @endif
-                    <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
-                    <p class="text-gray-600">{{ $user->email }}</p>
-                    
-                    <div class="mt-4">
+
+                    <h2 class="text-xl font-bold text-gray-900">{{ $user->name }}</h2>
+                    <p class="text-gray-600 text-sm">{{ $user->email }}</p>
+
+                    {{-- Status --}}
+                    <div class="mt-3">
                         @if($user->status == 'active')
-                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                                <i class="fas fa-check-circle mr-1"></i> Active
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                                Active
                             </span>
                         @elseif($user->status == 'banned')
-                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-red-100 text-red-800">
-                                <i class="fas fa-ban mr-1"></i> Banned
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700">
+                                Banned
                             </span>
                         @else
-                            <span class="px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                <i class="fas fa-clock mr-1"></i> Pending
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-700">
+                                Pending
                             </span>
                         @endif
                     </div>
                 </div>
 
-                <div class="border-t pt-4 space-y-3">
-                    <div class="flex justify-between">
+                {{-- Meta --}}
+                <div class="space-y-3 border-t pt-4">
+                    <div class="flex justify-between text-sm">
                         <span class="text-gray-600">User ID:</span>
-                        <span class="font-semibold">{{ $user->id }}</span>
+                        <span class="font-semibold text-gray-900">{{ $user->id }}</span>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Registered:</span>
-                        <span class="font-semibold">{{ $user->created_at->format('M d, Y') }}</span>
+                        <span class="font-semibold text-gray-900">{{ $user->created_at->format('M d, Y') }}</span>
                     </div>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Last Login:</span>
-                        <span class="font-semibold">{{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Never' }}</span>
+                        <span class="font-semibold text-gray-900">
+                            {{ $user->last_login_at ? $user->last_login_at->diffForHumans() : 'Never' }}
+                        </span>
                     </div>
                 </div>
 
-                <div class="mt-6 space-y-2">
-                    <a href="{{ route('admin.users.edit', $user->id) }}" class="block w-full px-4 py-2 bg-blue-600 text-white text-center rounded-lg hover:bg-blue-700 transition">
-                        <i class="fas fa-edit mr-2"></i> Edit User
+                {{-- Actions --}}
+                <div class="mt-6 flex justify-center gap-5">
+                    {{-- Edit --}}
+                    <a href="{{ route('admin.users.edit', $user->id) }}" class="text-yellow-500 hover:text-yellow-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18" /><path d="M7 17v-4l10 -10l4 4l-10 10h-4" />
+                        </svg>
                     </a>
-                    
+
+                    {{-- Ban / Activate --}}
                     @if($user->status == 'active')
-                        <form action="{{ route('admin.users.ban', $user->id) }}" method="POST">
+                        <form action="{{ route('admin.users.ban', $user->id) }}" method="POST"
+                            onsubmit="return confirm('Ban this user?')">
                             @csrf
-                            <button type="submit" class="w-full px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition" onclick="return confirm('Ban this user?')">
-                                <i class="fas fa-ban mr-2"></i> Ban User
+                            <button class="text-orange-500 hover:text-orange-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="5" y1="5" x2="19" y2="19"></line>
+                                </svg>
                             </button>
                         </form>
                     @else
-                        <form action="{{ route('admin.users.activate', $user->id) }}" method="POST">
+                        <form action="{{ route('admin.users.activate', $user->id) }}" method="POST"
+                            onsubmit="return confirm('Activate this user?')">
                             @csrf
-                            <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                <i class="fas fa-check-circle mr-2"></i> Activate User
+                            <button class="text-green-600 hover:text-green-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="9 12 12 15 16 10"></polyline>
+                                </svg>
                             </button>
                         </form>
                     @endif
 
-                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition" onclick="return confirm('Delete this user permanently?')">
-                            <i class="fas fa-trash mr-2"></i> Delete User
+                    {{-- Delete --}}
+                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                        onsubmit="return confirm('Delete this user permanently?')">
+                        @csrf @method('DELETE')
+                        <button class="text-red-500 hover:text-red-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1V6"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
                         </button>
                     </form>
                 </div>
             </div>
         </div>
 
+
         <!-- Activity Stats -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Activity Statistics</h3>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                        <div class="text-3xl font-bold text-blue-600">{{ $user->facilityPhotoLikes->count() }}</div>
-                        <div class="text-sm text-gray-600">Photo Likes</div>
-                    </div>
-                    <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-                        <div class="text-3xl font-bold text-green-600">{{ $user->facilityPhotoComments->count() }}</div>
-                        <div class="text-sm text-gray-600">Photo Comments</div>
-                    </div>
-                    <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                        <div class="text-3xl font-bold text-purple-600">{{ $user->hogwartsProphetLikes->count() }}</div>
-                        <div class="text-sm text-gray-600">Prophet Likes</div>
-                    </div>
-                    <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-                        <div class="text-3xl font-bold text-yellow-600">{{ $user->hogwartsProphetComments->count() }}</div>
-                        <div class="text-sm text-gray-600">Prophet Comments</div>
-                    </div>
-                    <div class="bg-red-50 rounded-lg p-4 border border-red-200">
-                        <div class="text-3xl font-bold text-red-600">{{ $user->achievementLikes->count() }}</div>
-                        <div class="text-sm text-gray-600">Achievement Likes</div>
-                    </div>
-                    <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
-                        <div class="text-3xl font-bold text-indigo-600">{{ $user->achievementComments->count() }}</div>
-                        <div class="text-sm text-gray-600">Achievement Comments</div>
-                    </div>
+            <div class="bg-white rounded-2xl shadow-md border border-gray-200 p-6 mb-6 hover:shadow-lg transition">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="w-1.5 h-8 bg-gradient-to-b from-[#b03535] via-[#3c5e5e] to-[#425d9e] rounded-full"></span>
+                    <h3 class="text-xl font-bold text-gray-800">Activity Statistics</h3>
                 </div>
-            </div>
 
-            <!-- Recent Comments -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Recent Comments</h3>
-                <div class="space-y-3">
-                    @php
-                        $allComments = collect()
-                            ->merge($user->facilityPhotoComments->map(fn($c) => ['type' => 'Facility Photo', 'content' => $c->content, 'date' => $c->created_at]))
-                            ->merge($user->hogwartsProphetComments->map(fn($c) => ['type' => 'Hogwarts Prophet', 'content' => $c->content, 'date' => $c->created_at]))
-                            ->merge($user->achievementComments->map(fn($c) => ['type' => 'Achievement', 'content' => $c->content, 'date' => $c->created_at]))
-                            ->sortByDesc('date')
-                            ->take(5);
-                    @endphp
-
-                    @forelse($allComments as $comment)
-                        <div class="p-3 bg-gray-50 rounded-lg border">
-                            <div class="flex justify-between items-start mb-2">
-                                <span class="text-xs font-semibold text-blue-600">{{ $comment['type'] }}</span>
-                                <span class="text-xs text-gray-500">{{ $comment['date']->diffForHumans() }}</span>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    {{-- Facility Likes --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#425d9e] uppercase mb-1">Facility Photos</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->facilityPhotoLikes->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Likes</p>
                             </div>
-                            <p class="text-sm text-gray-700">{{ Str::limit($comment['content'], 100) }}</p>
+                            <i class="fas fa-thumbs-up text-4xl text-gray-300"></i>
                         </div>
-                    @empty
-                        <p class="text-gray-500 text-center py-4">No comments yet</p>
-                    @endforelse
+                    </div>
+
+                    {{-- Facility Comments --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#3c5e5e] uppercase mb-1">Facility Photos</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->facilityPhotoComments->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Comments</p>
+                            </div>
+                            <i class="fas fa-comment text-4xl text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    {{-- Prophet Likes --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#3c5e5e] uppercase mb-1">Hogwarts Prophet</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->hogwartsProphetLikes->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Likes</p>
+                            </div>
+                            <i class="fas fa-newspaper text-4xl text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    {{-- Prophet Comments --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#425d9e] uppercase mb-1">Hogwarts Prophet</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->hogwartsProphetComments->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Comments</p>
+                            </div>
+                            <i class="fas fa-comment text-4xl text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    {{-- Achievement Likes --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#b03535] uppercase mb-1">Achievements</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->achievementLikes->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Likes</p>
+                            </div>
+                            <i class="fas fa-trophy text-4xl text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    {{-- Achievement Comments --}}
+                    <div class="rounded-2xl bg-white shadow-md border border-gray-200 p-6 hover:shadow-lg transition">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-semibold text-[#b03535] uppercase mb-1">Achievements</p>
+                                <h3 class="text-3xl font-bold text-gray-900">{{ $user->achievementComments->count() }}</h3>
+                                <p class="text-sm text-gray-500">Total Comments</p>
+                            </div>
+                            <i class="fas fa-comment text-4xl text-gray-300"></i>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
+
     </div>
 </div>
 @endsection

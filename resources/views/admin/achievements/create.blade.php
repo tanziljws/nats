@@ -63,7 +63,8 @@
                            focus:outline-none focus:ring-2 focus:ring-[#3c5e5e] focus:border-transparent transition">
                     <option value="">-- No House --</option>
                     @foreach ($houses as $house)
-                        <option value="{{ $house->id }}" {{ old('house_id') == $house->id ? 'selected' : '' }}>
+                        <option value="{{ $house->id }}" 
+                            {{ (string)old('house_id', $house_id ?? '') === (string)$house->id ? 'selected' : '' }}>
                             {{ $house->name }}
                         </option>
                     @endforeach
@@ -81,9 +82,9 @@
             {{-- Image --}}
             <div>
                 <div id="dropArea" class="w-48 h-60 bg-gray-100 rounded-xl overflow-hidden flex items-center justify-center relative border-2 border-dashed border-gray-300 cursor-pointer">
-                    <img id="photoPreview" src="#" class="object-cover w-full h-full hidden">
-                    <span id="photoPlaceholder" class="text-gray-400 text-center px-2">Photo</span>
-                    <input type="file" name="photo" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <img id="imagePreview" src="#" class="object-cover w-full h-full hidden">
+                    <span id="imagePlaceholder" class="text-gray-400 text-center px-2">Image</span>
+                    <input type="file" name="image" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                 </div>
                 <small class="text-gray-500 text-center block mt-2">Drag & drop image, paste (Ctrl/Cmd+V), or click to select</small>
             </div>
@@ -110,8 +111,8 @@
 <script>
     const dropArea = document.getElementById('dropArea');
     const photoInput = dropArea.querySelector('input[type="file"]');
-    const preview = document.getElementById('photoPreview');
-    const placeholder = document.getElementById('photoPlaceholder');
+    const preview = document.getElementById('imagePreview');
+    const placeholder = document.getElementById('imagePlaceholder');
 
     dropArea.addEventListener('click', () => photoInput.click());
 

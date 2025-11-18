@@ -54,7 +54,7 @@
         @forelse($news as $item)
             <div class="flex flex-col md:flex-row gap-5 bg-white border border-gray-200 shadow-sm rounded-2xl overflow-hidden p-5 hover:shadow-md transition">
                 {{-- Image --}}
-                <div class="w-full md:w-44 aspect-[5/3] flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+                <div class="w-full md:w-44 aspect-[5/3] flex-shrink-0 rounded-lg overflow-hidden bg-gray-100 ring-1 ring-gray-200 shadow-sm hover:shadow-md transition">
                     @if(!empty($item->image) && file_exists(public_path('storage/' . $item->image)))
                         <img src="{{ asset('storage/' . $item->image) }}" class="w-full h-full object-cover" alt="Thumbnail">
                     @else
@@ -82,8 +82,8 @@
                         <div class="space-y-1">
                             <p><span class="font-medium">{{ $item->writer }}</span></p>
                             <p class="text-xs text-gray-400">{{ $item->date ? \Carbon\Carbon::parse($item->date)->format('d M Y') : 'Unknown Date' }} </p>
-                            <div class="flex items-center gap-3 mt-1">
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 text-xs">
+                            <div class="flex items-center gap-4 mt-1 text-xs">
+                                <span class="inline-flex items-center gap-1 text-gray-600">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
                                             <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0-4 0" />
@@ -91,11 +91,17 @@
                                         </g>
                                     </svg> {{ $item->view_count ?? 0 }}
                                 </span>
-                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-50 text-red-600 text-xs">
+                                <a href="{{ route('admin.comments.likes-stats') }}" class="inline-flex items-center gap-1 text-red-600 hover:opacity-90 transition">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                         <path fill="currentColor" d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037.033l.034-.03a6 6 0 0 1 4.733-1.44l.246.036a6 6 0 0 1 3.364 10.008l-.18.185l-.048.041l-7.45 7.379a1 1 0 0 1-1.313.082l-.094-.082l-7.493-7.422A6 6 0 0 1 6.979 3.074" />
                                     </svg> {{ $item->likes_count ?? 0 }}
-                                </span>
+                                </a>
+                                <a href="{{ route('admin.comments.hogwarts-prophet', ['article_id' => $item->id]) }}" class="inline-flex items-center gap-1 text-gray-700 hover:opacity-90 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                        <path fill="currentColor" d="M7 10h10M7 14h7" />
+                                        <path fill="currentColor" d="M5 5h14a2 2 0 0 1 2 2v9l-3-2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" fill-opacity="0.15" />
+                                    </svg> {{ $item->comments()->count() }}
+                                </a>
                             </div>
                         </div>
 
@@ -134,6 +140,11 @@
                 <p>No articles found.</p>
             </div>
         @endforelse
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-8 flex justify-center">
+        {{ $news->onEachSide(1)->links('vendor.pagination.clean') }}
     </div>
 </div>
 @endsection

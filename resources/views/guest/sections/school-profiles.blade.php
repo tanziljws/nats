@@ -35,11 +35,16 @@
             </h2>
             <div class="rounded-2xl overflow-hidden shadow-lg bg-gray-100">
                 @if(!empty($profile->map_embed))
-                    <div class="w-full h-64">{!! $profile->map_embed !!}</div>
+                    <div class="relative w-full" style="padding-top:56.25%">
+                        <div class="absolute inset-0 [&>iframe]:w-full [&>iframe]:h-full [&>iframe]:absolute [&>iframe]:inset-0">
+                            {!! $profile->map_embed !!}
+                        </div>
+                    </div>
                 @else
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18..."
-                            width="100%" height="256" style="border:0;" allowfullscreen="" loading="lazy">
-                    </iframe>
+                    <div class="relative w-full" style="padding-top:56.25%">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18..."
+                                class="absolute inset-0 w-full h-full" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
                 @endif
             </div>
         </div>

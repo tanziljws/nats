@@ -48,13 +48,21 @@
 
                     <div class="grid grid-cols-2 gap-4 mt-4">
                         @foreach($houseStats as $house)
-                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 shadow-sm text-center transform transition duration-500 hover:scale-105 hover:shadow-lg">
-                                <img src="{{ asset('storage/' . $house->logo) }}" class="w-10 h-10 mx-auto mb-2" alt="{{ $house->name }}">
+                            <a href="{{ route('admin.houses.edit', $house->id) }}"
+                            class="p-4 rounded-xl border border-gray-200 bg-gray-50 shadow-sm text-center 
+                                    transform transition duration-300 hover:scale-105 hover:shadow-lg
+                                    block cursor-pointer">
+
+                                <img src="{{ asset('storage/' . $house->logo) }}" 
+                                    class="w-10 h-10 mx-auto mb-2" 
+                                    alt="{{ $house->name }}">
+
                                 <p class="font-semibold text-gray-800">{{ $house->name }}</p>
                                 <p class="text-gray-600 text-sm">{{ $house->students_last7years }} students</p>
-                            </div>
+                            </a>
                         @endforeach
                     </div>
+
                 </div>
 
                 {{-- Chart --}}

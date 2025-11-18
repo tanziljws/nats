@@ -13,7 +13,7 @@ class AchievementController extends Controller
 {
     public function index(Request $request)
     {
-        $achievements = Achievement::with('house')->latest()->get();
+        $achievements = Achievement::with(['house', 'likes'])->latest()->get();
 
         $achievementsData = $achievements->map(function($a) {
             return [
@@ -24,6 +24,8 @@ class AchievementController extends Controller
                 'writer' => $a->writer ?? 'Admin',
                 'date' => $a->date->format('F j, Y'),
                 'house' => $a->house->name ?? 'General',
+                'like_count' => $a->likes()->count(),
+                'view_count' => (int)($a->view_count ?? 0),
             ];
         });
 
@@ -83,6 +85,18 @@ class AchievementController extends Controller
             'success'=>true,
             'liked'=>$liked,
             'like_count'=>AchievementLike::where('achievement_id',$achievementId)->count()
+        ]);
+    }
+
+    /** ================= VIEW COUNT ================= */
+    public function trackView(Request $request, $achievementId)
+    {
+        $achievement = Achievement::findOrFail($achievementId);
+        $achievement->increment('view_count');
+
+        return response()->json([
+            'success' => true,
+            'view_count' => (int)$achievement->view_count,
         ]);
     }
 

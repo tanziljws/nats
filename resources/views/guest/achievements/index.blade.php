@@ -16,6 +16,17 @@
             </p>
         </div>
 
+        {{-- Shared SVG gradient defs (match Facilities) --}}
+        <svg width="0" height="0">
+            <defs>
+                <linearGradient id="catGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#b03535"/>
+                    <stop offset="50%" stop-color="#3c5e5e"/>
+                    <stop offset="100%" stop-color="#425d9e"/>
+                </linearGradient>
+            </defs>
+        </svg>
+
         {{-- Category Selector --}}
         <div class="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 mb-8 text-gray-700 font-semibold">
             <template x-for="cat in categories" :key="cat.id">
@@ -23,14 +34,18 @@
                         class="relative px-3 py-1 hover:text-[#425d9e] transition-all duration-300 text-sm sm:text-base md:text-base"
                         :class="selectedCategory === cat.id ? 'text-[#425d9e] font-bold' : ''">
                     <span x-text="cat.name"></span>
-                    <span x-show="selectedCategory === cat.id" x-transition
-                          class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] rounded-full mt-1"></span>
+                    <svg x-show="selectedCategory === cat.id"
+                         x-transition
+                         class="absolute bottom-0 left-0 w-full h-1 mt-1"
+                         viewBox="0 0 100 4" preserveAspectRatio="none">
+                        <rect width="100" height="4" rx="2" fill="url(#catGradient)"></rect>
+                    </svg>
                 </button>
             </template>
         </div>
 
         {{-- Achievement Cards --}}
-        <div id="achievementGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+        <div id="achievementGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <template x-for="(ach, idx) in paginatedAchievements" :key="ach.id">
                 <div class="group bg-white rounded-2xl shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300"
                      @click="openModal(idx)">
@@ -40,8 +55,8 @@
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                              :alt="ach.title">
 
-                        <span class="absolute top-3 left-3 px-2 py-1 text-xs sm:text-sm font-semibold rounded-full text-white shadow-sm z-10"
-                              :class="houseGradientClass(ach.house)">
+                        <!-- House Badge solid dark pill like homepage -->
+                        <span class="absolute top-3 left-3 z-10 inline-flex items-center px-2 py-1 rounded-full bg-black/80 text-white text-xs sm:text-sm font-semibold shadow">
                             <span x-text="ach.house || 'General'"></span>
                         </span>
 
@@ -54,20 +69,52 @@
                             <h3 class="text-lg font-semibold font-serif text-gray-900" x-text="ach.title"></h3>
                             <p class="text-gray-600 text-sm mt-1" x-text="ach.description"></p>
                         </div>
+                        <!-- No counters on cards as requested -->
                     </div>
                 </div>
             </template>
         </div>
 
-        {{-- Pagination --}}
-        <div class="flex justify-center mt-8 space-x-2">
-            <template x-for="page in totalPages" :key="page">
-                <button @click="currentPage = page" 
-                        class="px-3 py-1 rounded-lg transition-colors duration-300 font-semibold"
-                        :class="currentPage === page ? 'bg-gradient-to-r from-[#b03535] via-[#3c5e5e] to-[#425d9e] text-white shadow' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'">
-                    <span x-text="page"></span>
-                </button>
-            </template>
+        {{-- Pagination (admin style) --}}
+        <div class="flex justify-center mt-8">
+            <ul class="inline-flex items-center gap-1">
+                <!-- Prev -->
+                <li :class="{ 'opacity-40': currentPage === 1 }">
+                    <button @click="currentPage = Math.max(1, currentPage - 1)"
+                            :disabled="currentPage === 1"
+                            class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition disabled:cursor-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                </li>
+
+                <!-- Pages -->
+                <template x-for="page in totalPages" :key="page">
+                    <li>
+                        <template x-if="currentPage === page">
+                            <span aria-current="page"
+                                  class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-white shadow border border-transparent focus:outline-none focus:ring-2"
+                                  style="background-color:#425d9e;box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);">
+                                <span x-text="page"></span>
+                            </span>
+                        </template>
+                        <template x-if="currentPage !== page">
+                            <button @click="currentPage = page"
+                                    class="inline-flex items-center justify-center w-9 h-9 rounded-xl text-sm font-semibold transition border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300/60">
+                                <span x-text="page"></span>
+                            </button>
+                        </template>
+                    </li>
+                </template>
+
+                <!-- Next -->
+                <li :class="{ 'opacity-40': currentPage === totalPages }">
+                    <button @click="currentPage = Math.min(totalPages, currentPage + 1)"
+                            :disabled="currentPage === totalPages"
+                            class="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 transition disabled:cursor-default">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -128,7 +175,12 @@
                     </button>
                 </div>
 
-                <span class="text-sm text-gray-600 mt-2" x-text="likeCount + ' likes'"></span>
+                <div class="mt-2 flex items-center gap-4 text-sm text-gray-600">
+                    <span class="inline-flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                        <span x-text="likeCount"></span>
+                    </span>
+                </div>
 
                 {{-- Comments --}}
                 <div class="border-t mt-3 pt-3 flex-1 overflow-y-auto space-y-3">
@@ -147,9 +199,18 @@
                 <form @submit.prevent="postComment()" class="mt-3 flex gap-2">
                     <input type="text" x-model="newComment" placeholder="Write a comment..."
                         class="flex-1 px-3 py-2 rounded-2xl border border-gray-200 focus:outline-none" required>
-                    <button type="submit" class="inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-serif shadow transition hover:scale-105"
-                            style="background: linear-gradient(90deg, #b03535, #3c5e5e, #425d9e);">
-                        Send
+                    <button type="submit" class="relative inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-white font-serif shadow transition hover:scale-105 overflow-hidden">
+                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 40" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="send-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#b03535" />
+                                    <stop offset="50%" stop-color="#3c5e5e" />
+                                    <stop offset="100%" stop-color="#425d9e" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="0" y="0" width="100" height="40" rx="16" ry="16" fill="url(#send-grad)" />
+                        </svg>
+                        <span class="relative">Send</span>
                     </button>
                 </form>
             </div>
@@ -180,6 +241,7 @@ function achievementPage() {
 
         liked: false,
         likeCount: 0,
+        viewCount: 0,
         comments: [],
         newComment: '',
 
@@ -223,6 +285,28 @@ function achievementPage() {
             this.modalOpen = true;
             this.loadAchievementState();
 
+            // Track view
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (token && this.currentAchievement?.id) {
+                fetch(`/guest/achievements/${this.currentAchievement.id}/view`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-CSRF-TOKEN': token,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `_token=${encodeURIComponent(token)}`,
+                    credentials: 'same-origin'
+                }).then(r=>r.json()).then(d=>{
+                    if(d?.view_count !== undefined){
+                        this.viewCount = d.view_count;
+                        // also update in grid data
+                        this.currentAchievement.view_count = d.view_count;
+                    }
+                }).catch(()=>{});
+            }
+
             const id = this.currentAchievement.id;
             const params = new URLSearchParams(window.location.search);
             params.set('modal', id);
@@ -248,13 +332,13 @@ function achievementPage() {
             this.openModal(this.modalIndex);
         },
 
-        houseGradientClass(house) {
+        houseColors(house) {
             const colors = {
-                'Gryffindor': 'bg-gradient-to-r from-[#5c0c0c] to-[#8a3333]',
-                'Slytherin': 'bg-gradient-to-r from-[#063015] to-[#336343]',
-                'Ravenclaw': 'bg-gradient-to-r from-[#182552] to-[#6e8ab5]',
-                'Hufflepuff': 'bg-gradient-to-r from-[#59510a] to-[#ab8e37]',
-                'General': 'bg-gray-400'
+                'Gryffindor': { from: '#5c0c0c', to: '#8a3333' },
+                'Slytherin': { from: '#063015', to: '#336343' },
+                'Ravenclaw': { from: '#182552', to: '#6e8ab5' },
+                'Hufflepuff': { from: '#59510a', to: '#ab8e37' },
+                'General': { from: '#6b7280', to: '#9ca3af' }
             };
             return colors[house] || colors['General'];
         },
@@ -272,6 +356,9 @@ function achievementPage() {
             } catch(e){
                 console.error('Error loading like status:', e);
             }
+
+            // initialize view count from current data
+            this.viewCount = this.currentAchievement?.view_count ?? 0;
 
             try {
                 const commentRes = await fetch(`/guest/achievements/${this.currentAchievement.id}/comments`);
@@ -330,7 +417,7 @@ function achievementPage() {
                     
                     if (res.status === 401) {
                         console.log('User not authenticated, redirecting to login');
-                        window.location.href = `/guest/login?redirect=${encodeURIComponent(window.location.href)}`;
+                        window.location.href = `/user/login?redirect=${encodeURIComponent(window.location.href)}`;
                         return;
                     }
                     
@@ -371,7 +458,7 @@ function achievementPage() {
                 const data = await res.json();
 
                 if (!res.ok || data.error === 'unauthenticated') {
-                    window.location.href = `/guest/login?redirect=${encodeURIComponent(window.location.href)}`;
+                    window.location.href = `/user/login?redirect=${encodeURIComponent(window.location.href)}`;
                     return;
                 }
 
