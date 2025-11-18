@@ -33,12 +33,12 @@ use Illuminate\Support\Facades\Storage;
 /* ============================
    STORAGE FILES (Must be first to catch /storage/*)
 ============================= */
-// Handle /storage without path - return 404 with proper response
-// This prevents 404 errors in browser console
+// Handle /storage without path - return empty response to prevent 404 errors
+// This route must be exact match (not pattern) to catch /storage requests
 Route::get('/storage', function () {
-    // Return empty response instead of 404 to prevent console errors
-    return response('', 204);
-});
+    // Return 200 with empty response instead of 404 to prevent console errors
+    return response()->json([], 200);
+})->name('storage.index');
 
 // Handle /storage/{path}
 Route::get('/storage/{path}', function ($path) {
