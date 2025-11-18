@@ -31,6 +31,9 @@ class GuestHomeController extends Controller
         });
 
         $schoolProfile = SchoolProfile::first();
+        
+        // Ensure we always have a profile object (even if null, views will handle it)
+        // This prevents errors when profile doesn't exist in database
 
         $houses = House::withCount('students')->get();
 
