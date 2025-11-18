@@ -11,8 +11,10 @@
       type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- Tailwind via CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Tailwind CSS is loaded via Vite in production --}}
+    @if(config('app.env') !== 'production')
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
 
     {{-- Font Awesome --}}
     <link rel="stylesheet" 

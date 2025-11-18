@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\URL;
 use App\Models\SchoolProfile;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +22,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Force HTTPS in production
+        if (config('app.env') === 'production' || request()->isSecure()) {
+            URL::forceScheme('https');
+        }
+
         // Share School Profile 
         View::composer('*', function ($view) {
             $schoolProfile = SchoolProfile::first();

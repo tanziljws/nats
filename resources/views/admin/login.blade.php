@@ -10,7 +10,11 @@
           : asset('default-icon.png') }}" 
       type="image/x-icon">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Tailwind CSS is loaded via Vite in production --}}
+    @if(config('app.env') !== 'production')
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#b03535] via-[#3c5e5e] to-[#425d9e]">

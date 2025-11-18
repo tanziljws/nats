@@ -6,8 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Hogwarts Admin Panel</title>
 
-    {{-- Tailwind CSS CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
+    {{-- Tailwind CSS is loaded via Vite in production --}}
+    @if(config('app.env') !== 'production')
+        <script src="https://cdn.tailwindcss.com"></script>
+    @endif
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     {{-- Font Awesome --}}
     <link
