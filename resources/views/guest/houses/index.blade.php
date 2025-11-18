@@ -17,7 +17,7 @@
 
     {{-- Content --}}
     <div class="relative z-10 text-center flex flex-col items-center justify-center gap-6 px-6">
-        <img src="{{ asset('storage/' . ($schoolProfile->logo ?? 'placeholder-logo.png')) }}"
+        <img src="{{ $schoolProfile && $schoolProfile->logo ? asset('storage/' . $schoolProfile->logo) : asset('images/hogwarts.jpg') }}"
              alt="Hogwarts Logo"
              class="w-28 h-28 md:w-36 md:h-36 drop-shadow-lg">
         <h1 class="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-white leading-tight">
