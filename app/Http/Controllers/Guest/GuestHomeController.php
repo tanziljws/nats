@@ -45,10 +45,7 @@ class GuestHomeController extends Controller
             ->get();
 
         // Hero Slideshow
-        $achievements = Achievement::latest()->take(6)->get()->map(function($achievement){
-            $achievement->image = $achievement->image ?? 'placeholder.jpg';
-            return $achievement;
-        });
+        $achievements = Achievement::latest()->take(6)->get();
 
         $founders = Founder::all();
         $totalStudents = Student::count();
