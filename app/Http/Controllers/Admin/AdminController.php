@@ -76,6 +76,7 @@ class AdminController extends Controller
                 'motto' => 'Draco Dormiens Nunquam Titillandus',
                 'vision' => 'To provide the finest magical education in the world.',
                 'mission' => 'To nurture young witches and wizards in the magical arts.',
+                'house_banners' => [], // Default empty array for house_banners
             ]);
         }
 

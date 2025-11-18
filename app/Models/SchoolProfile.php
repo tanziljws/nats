@@ -26,6 +26,11 @@ class SchoolProfile extends Model
         'headmaster_name',  
         'headmaster_photo',
         'history',
+        'house_banners',
+    ];
+
+    protected $casts = [
+        'house_banners' => 'array',
     ];
 
     public function founders()
