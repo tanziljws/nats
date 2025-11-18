@@ -48,7 +48,7 @@
                     
                     {{-- Image --}}
                     <div class="relative h-48 overflow-hidden">
-                        <img :src="ach.image ? `/storage/${ach.image}` : '/images/placeholder.jpg'" 
+                        <img :src="ach.image ? `/storage/${ach.image}` : '{{ asset('images/placeholder.jpg') }}'" 
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                              :alt="ach.title">
 
@@ -100,7 +100,7 @@
 
                 <template x-for="(ach,i) in filteredAchievements" :key="ach.id">
                     <img x-show="modalIndex === i" 
-                         :src="ach.image ? `/storage/${ach.image}` : '/images/placeholder.jpg'" 
+                         :src="ach.image ? `/storage/${ach.image}` : '{{ asset('images/placeholder.jpg') }}'" 
                          class="max-h-[80vh] max-w-full object-contain transition-all duration-500"
                          :alt="ach.title" />
                 </template>

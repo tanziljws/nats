@@ -121,7 +121,7 @@
                     <a href="{{ route('guest.achievements.index') }}?modal={{ $achievement->id }}" class="block group cursor-pointer w-full">
                         <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col w-full">
                             <div class="relative h-48 overflow-hidden rounded-t-2xl">
-                                <img src="{{ $achievement->image ? asset('storage/' . $achievement->image) : '/images/placeholder.jpg' }}" 
+                                <img src="{{ $achievement->image ? asset('storage/' . $achievement->image) : asset('images/placeholder.jpg') }}" 
                                      alt="{{ $achievement->title }}" 
                                      class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
 

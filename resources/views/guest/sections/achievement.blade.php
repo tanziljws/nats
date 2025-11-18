@@ -50,7 +50,7 @@
                     <article class="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 flex flex-col">
                         {{-- Image --}}
                         <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $achievement->image ? asset('storage/' . $achievement->image) : '/images/placeholder.jpg' }}" 
+                            <img src="{{ $achievement->image ? asset('storage/' . $achievement->image) : asset('images/placeholder.jpg') }}" 
                                  alt="{{ $achievement->title }}" 
                                  class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
 

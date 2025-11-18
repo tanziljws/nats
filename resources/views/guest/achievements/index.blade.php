@@ -51,7 +51,7 @@
                      @click="openModal(idx)">
                     
                     <div class="relative h-48 overflow-hidden">
-                        <img :src="ach.image ? `/storage/${ach.image}` : '/images/placeholder.jpg'" 
+                        <img :src="ach.image ? `/storage/${ach.image}` : '{{ asset('images/placeholder.jpg') }}'" 
                              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                              :alt="ach.title">
 
@@ -144,7 +144,7 @@
                     </svg>
                 </button>
 
-                <img :src="currentAchievement.image ? `/storage/${currentAchievement.image}` : '/images/placeholder.jpg'" 
+                <img :src="currentAchievement.image ? `/storage/${currentAchievement.image}` : '{{ asset('images/placeholder.jpg') }}'" 
                      class="max-h-[80vh] max-w-full object-contain transition-all duration-500"
                      :alt="currentAchievement.title" />
 

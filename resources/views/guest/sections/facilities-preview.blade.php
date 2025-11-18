@@ -28,7 +28,7 @@
                 @php
                     $bgImage = $category->coverPhoto?->image 
                         ? asset('storage/' . $category->coverPhoto->image) 
-                        : asset('/images/placeholder.jpg');
+                        : asset('images/placeholder.jpg');
                 @endphp
 
                 <a href="{{ route('guest.facilities.index', $category->slug) }}" 
