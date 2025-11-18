@@ -192,7 +192,8 @@
                     @if($profile->hero_image)
                         <div class="mb-3">
                             <img src="{{ asset('storage/' . $profile->hero_image) }}" 
-                                alt="Current Hero Image" 
+                                alt="Current Hero Image"
+                                onerror="this.style.display='none'" 
                                 class="h-32 w-auto rounded-lg shadow">
                         </div>
                     @endif
