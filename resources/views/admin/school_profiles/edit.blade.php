@@ -79,7 +79,7 @@
                     <div class="flex items-start space-x-4">
                         @if($profile->logo)
                             <div class="flex-shrink-0">
-                                <img src="{{ asset('storage/' . $profile->logo) }}" alt="School Logo" class="h-16 w-auto rounded-md shadow">
+                                <img src="{{ asset('storage/' . $profile->logo) }}" alt="School Logo" class="h-16 w-auto rounded-md shadow" onerror="this.style.display='none'">
                             </div>
                         @endif
                         <div class="flex-grow">

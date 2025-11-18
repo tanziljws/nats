@@ -17,7 +17,8 @@
         <div class="mb-12">
             <img src="{{ asset('storage/' . $profile->hero_image) }}" 
                  alt="Hero Image" 
-                 class="w-full h-72 object-cover rounded-2xl shadow-md">
+                 class="w-full h-72 object-cover rounded-2xl shadow-md"
+                 onerror="this.style.display='none'">
         </div>
     @endif
 
@@ -26,7 +27,8 @@
         <div class="flex items-center mb-4 md:mb-0">
             @if($profile->logo)
                 <img src="{{ asset('storage/' . $profile->logo) }}" 
-                     alt="School Logo" class="h-20 w-20 object-contain mr-4 rounded-xl shadow">
+                     alt="School Logo" class="h-20 w-20 object-contain mr-4 rounded-xl shadow"
+                     onerror="this.style.display='none'">
             @endif
             <h1 class="text-3xl font-bold text-gray-900">{{ $profile->title ?? '-' }}</h1>
         </div>

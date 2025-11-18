@@ -5,7 +5,8 @@
     <div class="absolute inset-0">
         <img src="{{ $profile && $profile->hero_image ? asset('storage/' . $profile->hero_image) : 'https://picsum.photos/1600/900?blur' }}" 
              alt="Achievements Background" 
-             class="w-full h-full object-cover brightness-75">
+             class="w-full h-full object-cover brightness-75"
+             onerror="this.src='https://picsum.photos/1600/900?blur'">
         <div class="absolute inset-0 bg-black/30"></div>
     </div>
 

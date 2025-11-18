@@ -99,6 +99,8 @@ Route::get('/storage/{path}', function ($path) {
         
         abort(404, 'File not found: ' . $path);
     } catch (\Exception $e) {
+        // Log error for debugging but return 404 instead of 500
+        \Log::warning('Storage file not found: ' . $path . ' - ' . $e->getMessage());
         abort(404, 'File not found');
     }
 })->where('path', '.*')->name('storage.serve');

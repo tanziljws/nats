@@ -3,7 +3,11 @@
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex items-center space-x-3">
-                <img src="{{ asset('storage/' . ($schoolProfile->logo ?? '')) }}" class="w-10 h-10 object-contain" alt="Logo">
+                @if($schoolProfile && $schoolProfile->logo)
+                    <img src="{{ asset('storage/' . $schoolProfile->logo) }}" class="w-10 h-10 object-contain" alt="Logo" onerror="this.src='{{ asset('images/hogwarts.jpg') }}'">
+                @else
+                    <img src="{{ asset('images/hogwarts.jpg') }}" class="w-10 h-10 object-contain" alt="Logo">
+                @endif
                 <span class="font-bold text-gray-800 text-lg">{{ $schoolProfile->school_name ?? 'Hogwarts' }}</span>
             </div>
 

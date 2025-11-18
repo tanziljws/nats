@@ -4,6 +4,7 @@
         src="{{ $profile && $profile->hero_image ? asset('storage/' . $profile->hero_image) : 'https://picsum.photos/1600/900?blur' }}"
         alt="School Hero" 
         class="absolute inset-0 w-full h-full object-cover brightness-[0.6]"
+        onerror="this.src='https://picsum.photos/1600/900?blur'"
     >
 
 
@@ -15,7 +16,8 @@
             <div class="mt-8 flex justify-center" data-aos="zoom-in" data-aos-delay="100">
                 <img src="{{ asset('storage/' . $profile->logo) }}" 
                      alt="School Logo" 
-                     class="h-28 w-auto rounded-xl shadow-lg   p-3">
+                     class="h-28 w-auto rounded-xl shadow-lg p-3"
+                     onerror="this.src='{{ asset('images/hogwarts.jpg') }}'">
             </div>
         @endif
 
