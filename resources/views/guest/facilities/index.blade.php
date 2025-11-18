@@ -59,9 +59,10 @@
             <template x-for="cat in categories" :key="cat.id">
                 <div @click="selectCategory(cat.id)"
                      class="cursor-pointer group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-400 hover:scale-105">
-                    <img :src="cat.cover ? `/storage/${cat.cover}` : `https://via.placeholder.com/800x600?text=${cat.name}`"
+                    <img :src="cat.cover ? `/storage/${cat.cover}` : '{{ asset('images/placeholder.jpg') }}'"
                          class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
-                         :alt="cat.name">
+                         :alt="cat.name"
+                         onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                     <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/60 to-transparent p-4">
                         <h2 class="text-lg md:text-xl font-serif font-semibold text-white" x-text="cat.name"></h2>
                     </div>
