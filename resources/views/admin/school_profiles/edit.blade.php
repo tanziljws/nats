@@ -238,66 +238,33 @@
 
         {{-- FOUNDERS --}}
         <div class="bg-gray-50 p-6 rounded-lg mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold flex items-center gap-2">
-                    <span class="w-1.5 h-8 bg-gradient-to-b from-[#425d9e] via-[#3c5e5e] to-[#b03535] rounded-full"></span>
-                    Founders
-                </h2>
-                <a href="{{ route('admin.school-profile.founders.create') }}" 
-                   class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#425d9e] via-[#3c5e5e] to-[#b03535] text-white rounded-lg font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition-all">
-                    <i class="fas fa-plus"></i>
-                    Add Founder
-                </a>
-            </div>
-
-            @php
-                $founderTextColors = [
-                    'Godric Gryffindor' => '#300901', 
-                    'Salazar Slytherin' => '#013006', 
-                    'Rowena Ravenclaw'  => '#011130', 
-                    'Helga Hufflepuff'  => '#302701', 
-                ];
-            @endphp
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <span class="w-1.5 h-8 bg-gradient-to-b from-[#425d9e] via-[#3c5e5e] to-[#b03535] rounded-full"></span>
+                Founders
+            </h2>
 
             @if($profile->founders->count() > 0)
-                <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-8">
-                    @foreach ($profile->founders as $founder)
-                        @php $textColor = $founderTextColors[$founder->name] ?? '#3c5e5e'; @endphp
-                        <a href="{{ route('admin.school-profile.founders.edit', $founder->id) }}" class="relative cursor-pointer bg-white rounded-3xl overflow-hidden shadow-lg transition-transform duration-500 hover:scale-105">
-                            <div class="absolute top-3 right-3 z-10 bg-white/80 rounded-full p-2 text-gray-400 hover:text-gray-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" />
-                                    <path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3" />
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($profile->founders as $founder)
+                        <a href="{{ route('admin.school-profile.founders.edit', $founder->id) }}" class="relative block bg-white rounded-lg shadow-sm p-4 text-center hover:shadow-md transition overflow-hidden">
+                            <div class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="w-5 h-5">
+                                    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                        <path d="M7 7H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-1" />
+                                        <path d="M20.385 6.585a2.1 2.1 0 0 0-2.97-2.97L9 12v3h3zM16 5l3 3" />
+                                    </g>
                                 </svg>
                             </div>
-                            <img src="{{ $founder->photo ? asset('storage/' . $founder->photo) : 'https://picsum.photos/300/300?random=' . $loop->index }}"
-                                 alt="{{ $founder->name }}"
-                                 class="w-full h-40 object-cover"
-                                 onerror="this.src='{{ asset('images/hogwarts.jpg') }}'">
-                            <div class="p-5 text-left">
-                                <h3 class="font-semibold text-xl text-center" style="color: {{ $textColor }};">
-                                    {{ $founder->name }}
-                                </h3>
-                                <p class="text-gray-500 text-sm mt-1 italic text-left pt-4">
-                                    {{ 'Born in ' . $founder->birth_year }}
-                                </p>
-                            </div>
+
+                            <img src="{{ $founder->photo ? asset('storage/' . $founder->photo) : asset('images/default-avatar.png') }}" alt="{{ $founder->name }}" class="h-20 w-20 rounded-full object-cover mx-auto mb-3 border-2 border-gray-300" onerror="this.src='{{ asset('images/hogwarts.jpg') }}'">
+                            <h4 class="text-md font-bold text-gray-800">{{ $founder->name }}</h4>
+                            <p class="text-sm text-gray-500">Born {{ $founder->birth_year }}</p>
+                            <p class="text-xs text-gray-600 mt-1">{{ Str::limit($founder->description, 60) }}</p>
                         </a>
                     @endforeach
                 </div>
             @else
-                <div class="text-center py-12">
-                    <div class="text-gray-400 mb-4">
-                        <i class="fas fa-users text-6xl"></i>
-                    </div>
-                    <h3 class="text-lg font-medium text-gray-500 mb-2">No founders added yet</h3>
-                    <p class="text-gray-400 mb-6">Start by adding the founders of Hogwarts School</p>
-                    <a href="{{ route('admin.school-profile.founders.create') }}" 
-                       class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#425d9e] via-[#3c5e5e] to-[#b03535] text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all">
-                        <i class="fas fa-plus"></i>
-                        Add First Founder
-                    </a>
-                </div>
+                <p class="text-gray-500">No founders added yet.</p>
             @endif
         </div>
 
