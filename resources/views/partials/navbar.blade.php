@@ -38,9 +38,6 @@
                         </button>
                         
                         <div x-show="userMenu" @click.away="userMenu = false" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                            <a href="{{ route('user.profile') }}">
-                                 My Profile
-                            </a>
                             <form action="{{ route('user.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
@@ -83,9 +80,6 @@
         <a href="{{ route('guest.home') }}#contact" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Contact</a>
         
         @auth('web')
-            <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                <i class="fas fa-user mr-2"></i> My Profile
-            </a>
             <form action="{{ route('user.logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
