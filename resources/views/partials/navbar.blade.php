@@ -71,13 +71,13 @@
     </div>
 
     <!-- mobile menu -->
-    <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2">
-        <a href="{{ route('guest.home') }}#about" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
-        <a href="{{ route('guest.houses.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Houses</a>
-        <a href="{{ route('guest.hogwarts-prophet.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">HogwartsProphet</a>
-        <a href="{{ route('guest.achievements.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Achievements</a>
-        <a href="{{ route('guest.facilities.index') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Facilities</a>
-        <a href="{{ route('guest.home') }}#contact" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Contact</a>
+    <div x-show="open" class="lg:hidden px-4 pb-4 space-y-2" @click.away="open = false">
+        <a href="{{ route('guest.home') }}#about" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Profile</a>
+        <a href="{{ route('guest.houses.index') }}" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Houses</a>
+        <a href="{{ route('guest.hogwarts-prophet.index') }}" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">HogwartsProphet</a>
+        <a href="{{ route('guest.achievements.index') }}" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Achievements</a>
+        <a href="{{ route('guest.facilities.index') }}" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Facilities</a>
+        <a href="{{ route('guest.home') }}#contact" @click="open = false" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Contact</a>
         
         @auth('web')
             <form action="{{ route('user.logout') }}" method="POST">
