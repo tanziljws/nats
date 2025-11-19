@@ -11,13 +11,13 @@ class SchoolProfileController extends Controller
 {
     public function index()
     {
-        $profile = SchoolProfile::first();
+        $profile = SchoolProfile::with('founders')->first();
         return view('admin.school_profiles.index', compact('profile'));
     }
 
     public function edit()
     {
-        $profile = SchoolProfile::first();
+        $profile = SchoolProfile::with('founders')->first();
         return view('admin.school_profiles.edit', compact('profile'));
     }
 
