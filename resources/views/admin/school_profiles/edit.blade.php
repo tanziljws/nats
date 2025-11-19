@@ -238,10 +238,17 @@
 
         {{-- FOUNDERS --}}
         <div class="bg-gray-50 p-6 rounded-lg mb-8">
-            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-                <span class="w-1.5 h-8 bg-gradient-to-b from-[#425d9e] via-[#3c5e5e] to-[#b03535] rounded-full"></span>
-                Founders
-            </h2>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold flex items-center gap-2">
+                    <span class="w-1.5 h-8 bg-gradient-to-b from-[#425d9e] via-[#3c5e5e] to-[#b03535] rounded-full"></span>
+                    Founders
+                </h2>
+                <a href="{{ route('admin.school-profile.founders.create') }}" 
+                   class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#425d9e] via-[#3c5e5e] to-[#b03535] text-white rounded-lg font-semibold shadow-md hover:shadow-lg hover:scale-[1.02] transition-all">
+                    <i class="fas fa-plus"></i>
+                    Add Founder
+                </a>
+            </div>
 
             @if($profile->founders->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -256,7 +263,7 @@
                                 </svg>
                             </div>
 
-                            <img src="{{ $founder->photo ? asset('storage/' . $founder->photo) : asset('images/default-avatar.png') }}" alt="{{ $founder->name }}" class="h-20 w-20 rounded-full object-cover mx-auto mb-3 border-2 border-gray-300">
+                            <img src="{{ $founder->photo ? asset('storage/' . $founder->photo) : asset('images/default-avatar.png') }}" alt="{{ $founder->name }}" class="h-20 w-20 rounded-full object-cover mx-auto mb-3 border-2 border-gray-300" onerror="this.src='{{ asset('images/hogwarts.jpg') }}'">
                             <h4 class="text-md font-bold text-gray-800">{{ $founder->name }}</h4>
                             <p class="text-sm text-gray-500">Born {{ $founder->birth_year }}</p>
                             <p class="text-xs text-gray-600 mt-1">{{ Str::limit($founder->description, 60) }}</p>
@@ -264,7 +271,17 @@
                     @endforeach
                 </div>
             @else
-                <p class="text-gray-500">No founders added yet.</p>
+                <div class="text-center py-8">
+                    <div class="text-gray-400 mb-4">
+                        <i class="fas fa-users text-5xl"></i>
+                    </div>
+                    <p class="text-gray-500 mb-4">No founders added yet.</p>
+                    <a href="{{ route('admin.school-profile.founders.create') }}" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#425d9e] via-[#3c5e5e] to-[#b03535] text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all">
+                        <i class="fas fa-plus"></i>
+                        Add First Founder
+                    </a>
+                </div>
             @endif
         </div>
 
