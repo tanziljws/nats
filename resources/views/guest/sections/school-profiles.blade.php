@@ -201,7 +201,8 @@
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
      class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
-     @keydown.escape.window="close()">
+     @keydown.escape.window="close()"
+     @click.self="close()">
 
     <div x-show="open"
          x-transition:enter="transition ease-out duration-300 transform"
@@ -210,7 +211,8 @@
          x-transition:leave="transition ease-in duration-300 transform"
          x-transition:leave-start="opacity-100 scale-100"
          x-transition:leave-end="opacity-0 scale-90"
-         class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[360px] md:h-[420px] flex flex-col md:flex-row overflow-hidden relative">
+         class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[360px] md:h-[420px] flex flex-col md:flex-row overflow-hidden relative"
+         @click.stop>
 
         {{-- Photo --}}
         <div class="md:w-1/2 h-48 md:h-auto">
@@ -234,7 +236,10 @@
         </div>
 
         {{-- Close --}}
-        <button @click="close()" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 font-bold text-2xl md:text-3xl">&times;</button>
+        <button @click="close()" 
+                class="absolute top-3 right-3 z-10 bg-white/90 hover:bg-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-gray-600 hover:text-gray-900 font-bold text-2xl md:text-3xl shadow-md transition-all">
+            &times;
+        </button>
     </div>
 </div>
 
